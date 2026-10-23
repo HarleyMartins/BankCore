@@ -37,10 +37,6 @@ public class Conta{
         this.titular = titular;
     }
 
-    //setSaldo
-    public void setSaldo(double saldo) {
-        this.saldo = saldo;
-    }
 
     //depositMoney
     public void depositMoney(double value){

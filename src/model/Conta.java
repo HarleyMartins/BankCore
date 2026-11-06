@@ -3,10 +3,11 @@ package model;
 import model.Transacao;
 import java.util.ArrayList;
 import java.util.List;
+import java.math.BigDecimal;
 
 public class Conta{
     //tributos
-    private double saldo;
+    private BigDecimal saldo;
     private String titular;
     private List<Transacao> transacoes = new ArrayList<>();
 
@@ -24,12 +25,12 @@ public class Conta{
     }
 
     //construtor
-    public Conta(String titular, double saldo){
+    public Conta(String titular, BigDecimal saldo){
         if (titular.isBlank() || titular == null){
             throw new IllegalArgumentException("Nome do titular inválido");
         }
 
-        if (saldo < 0 || !Double.isFinite(saldo)){
+        if (saldo == null || saldo.compareTo(BigDecimal.ZERO) < 0){
             throw new IllegalArgumentException("Saldo inicial inválido");
         }
 
@@ -55,7 +56,7 @@ public class Conta{
 
 
     //getSaldo
-    public double getSaldo(){
+    public BigDecimal getSaldo(){
         return this.saldo;
     }
 
@@ -66,13 +67,13 @@ public class Conta{
 
 
     //depositMoney
-    public void depositMoney(double value){
-        if (value <= 0 || !Double.isFinite(value)){
+    public void depositMoney(BigDecimal value){
+        if (value == null || saldo.compareTo(BigDecimal.ZERO) < 0){
            throw new IllegalArgumentException("O valor do depósito deve ser maior do que zero");
         }
 
         System.out.println("Valor a ser depositado: " + value);
-        saldo += value;
+        saldo = saldo.add(value);
         System.out.println("Saldo total: " + saldo);
 
         registerAction(new Transacao(
@@ -83,17 +84,17 @@ public class Conta{
     }
 
     // withdrawMoney
-    public void withdrawMoney(double value){
-        if (value <= 0 || !Double.isFinite(value)){
+    public void withdrawMoney(BigDecimal value){
+        if (value == null || value.compareTo(BigDecimal.ZERO) < 0){
             throw new IllegalArgumentException("O valor deve ser maior que zero");
         }
 
-        if (saldo < value){
+        if (saldo.compareTo(value) < 0){
             throw new IllegalArgumentException("Saldo insuficiente para saque");
         }
 
 
-        saldo -= value;
+        saldo = saldo.subtract(value);
         System.out.println("Foi retirado: " + value + ", saldo restante: " + saldo);
 
         registerAction(new Transacao(
@@ -103,7 +104,7 @@ public class Conta{
         ));
     }
 
-    public void toTransfer(Conta destino, double value){
+    public void toTransfer(Conta destino, BigDecimal value){
         if (destino == null){
             throw new IllegalArgumentException("A conta de destino não pode ser nula");
         }
@@ -113,16 +114,16 @@ public class Conta{
         }
 
 
-        if (value <= 0 || !Double.isFinite(value)){
+        if (value == null || value.compareTo(BigDecimal.ZERO) < 0){
             throw new IllegalArgumentException("O valor deve ser maior que zero");
         }
 
-        if (this.saldo < value){
+        if (this.saldo.compareTo(value) < 0){
             throw new IllegalArgumentException("Saldo insuficiente para transferência");
         }
 
-        this.saldo -= value;
-        destino.saldo += value;
+        this.saldo = this.saldo.subtract(value);
+        destino.saldo = destino.saldo.add(value);
 
         registerAction(new Transacao(
                 "Transferência",

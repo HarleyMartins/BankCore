@@ -1,11 +1,13 @@
 package model;
 
+import java.math.BigDecimal;
+
 public class Transacao {
     private String tipo;
-    private double valor;
+    private BigDecimal valor;
     private String descricao;
 
-    public Transacao(String tipo, double valor, String descricao){
+    public Transacao(String tipo, BigDecimal valor, String descricao){
         this.tipo = tipo;
         this.valor = valor;
         this.descricao = descricao;

@@ -1,5 +1,7 @@
 package service;
 import model.Conta;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,7 @@ public class BancoService {
         Conta conta = findAccount(titular);
 
         if (conta != null){
-            if (conta.getSaldo() == 0){
+            if (conta.getSaldo().compareTo(BigDecimal.ZERO) == 0){
                 contas.remove(conta);
                 System.out.println("Conta de" + titular + " removida com sucesso");
             } else{
